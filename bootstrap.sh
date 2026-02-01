@@ -42,7 +42,7 @@ build_nvim() {
   local NVIM_INSTALL_DIR=/tmp/new-neovim
 
   install_if_not_available git
-  git clone https://github.com/neovim/neovim "$NVIM_SRC_DIR"
+  git clone https://github.com/neovim/neovim "$NVIM_SRC_DIR" --depth 1
   cd "$NVIM_SRC_DIR"
   make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$NVIM_INSTALL_DIR" install
   echo "Neovim built and installed in $NVIM_INSTALL_DIR"
