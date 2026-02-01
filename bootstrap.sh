@@ -141,6 +141,12 @@ ask_box "Bootstrap Script" "Continue" "Return" "This script is going to bootstra
 ask_box "Be sure you have your keyboard layout properly set before continuing" "Continue" "Return" 'You can see a list of keyboard layouts and models by running "man xkeyboard-config" on the command-line (without quotes), then you can set a keyboard layout with "setxkbmap <layout>". For example, to set your keyboard layout to "us", use "setxkbmap us".'
 ! [ "$?" = 0 ] && exit
 
+ask_box "Configure Git?" "Yes" "No" "Requires global user.name and user.email used for Git."
+[ "$?" = 0 ] && opt_configure_git=1
+
+ask_box "Authenticate Github CLI?" "Yes" "No" "Requires a web browser or an authentication token."
+[ "$?" = 0 ] && opt_authenticate_github_cli=1
+
 ask_box "Pull dotfiles repository?" "Yes" "No" "If some/all of those files already exist, they will be overwritten.\n\nFiles in $HOME/.config/nvim/ are required for bootstrapping Neovim.\n\nFiles in $HOME/Misc/package-lists/arch/ are required for installing packages from Pacman and/or AUR.\n\nRequires Github username and password/authentication token."
 [ "$?" = 0 ] && opt_pull_dotfiles=1
 
@@ -149,12 +155,6 @@ ask_box "Pull wallpapers repository?" "Yes" "No" "If some/all of those files alr
 
 ask_box "Bootstrap Neovim?" "Yes" "No" "If it was already bootstrapped, you will have to quit manually."
 [ "$?" = 0 ] && opt_bootstrap_neovim=1
-
-ask_box "Configure Git?" "Yes" "No" "Requires global user.name and user.email used for Git."
-[ "$?" = 0 ] && opt_configure_git=1
-
-ask_box "Authenticate Github CLI?" "Yes" "No" "Requires a web browser or an authentication token."
-[ "$?" = 0 ] && opt_authenticate_github_cli=1
 
 ask_box "Configure zsh?" "Yes" "No" ""
 [ "$?" = 0 ] && opt_configure_zsh=1
@@ -182,7 +182,7 @@ ask_box "Install NPM packages?" "Yes" "No" ""
 ask_box "Uninstall gnome keyring?" "Yes" "No" "Keyring is a linux security feature, but gnome keyring makes an annoying popup appear everytime one opens up a browser if they use automatic login on their system.\n\ngnome keyring is installed by default in some linux distros."
 [ "$?" = 0 ] && opt_uninstall_gnome_keyring=1
 
-opts="pull_dotfiles pull_wallpapers bootstrap_neovim configure_git authenticate_github_cli configure_zsh install_nerdfonts install_pacman install_aur_binary install_aur_non_binary install_pip install_npm uninstall_gnome_keyring"
+opts="configure_git authenticate_github_cli pull_dotfiles pull_wallpapers bootstrap_neovim configure_zsh install_nerdfonts install_pacman install_aur_binary install_aur_non_binary install_pip install_npm uninstall_gnome_keyring"
 opts_info=""
 
 for opt_name in $opts; do
