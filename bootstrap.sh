@@ -37,6 +37,17 @@ pull_wallpapers() {
   git clone https://github.com/ciscocarvalho/wallpapers $HOME/wallpapers
 }
 
+build_nvim() {
+  local NVIM_SRC_DIR=/tmp/neovim
+  local NVIM_INSTALL_DIR=/tmp/new-neovim
+
+  install_if_not_available git
+  git clone https://github.com/neovim/neovim "$NVIM_SRC_DIR"
+  cd "$NVIM_SRC_DIR"
+  make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$NVIM_INSTALL_DIR" install
+  echo "Neovim built and installed in $NVIM_INSTALL_DIR"
+}
+
 configure_git() {
   install_if_not_available git
   read -p "user.name: " git_user_name
@@ -170,6 +181,9 @@ ask_box "Pull nvim config?" "Yes" "No" "If some/all of those files already exist
 ask_box "Pull wallpapers repository?" "Yes" "No" "If some/all of those files already exist, they will be overwritten."
 [ "$?" = 0 ] && opt_pull_wallpapers=1
 
+ask_box "Build neovim from source?" "Yes" "No" ""
+[ "$?" = 0 ] && opt_build_nvim=1
+
 ask_box "Bootstrap Neovim?" "Yes" "No" "If it was already bootstrapped, you will have to quit manually."
 [ "$?" = 0 ] && opt_bootstrap_neovim=1
 
@@ -199,7 +213,7 @@ ask_box "Install NPM packages?" "Yes" "No" ""
 ask_box "Uninstall gnome keyring?" "Yes" "No" "Keyring is a linux security feature, but gnome keyring makes an annoying popup appear everytime one opens up a browser if they use automatic login on their system.\n\ngnome keyring is installed by default in some linux distros."
 [ "$?" = 0 ] && opt_uninstall_gnome_keyring=1
 
-opts="configure_git authenticate_github_cli pull_dotfiles pull_awesome_config pull_nvim_config pull_wallpapers bootstrap_neovim configure_zsh install_nerdfonts install_pacman install_aur_binary install_aur_non_binary install_pip install_npm uninstall_gnome_keyring"
+opts="configure_git authenticate_github_cli pull_dotfiles pull_awesome_config pull_nvim_config pull_wallpapers build_nvim bootstrap_neovim configure_zsh install_nerdfonts install_pacman install_aur_binary install_aur_non_binary install_pip install_npm uninstall_gnome_keyring"
 opts_info=""
 
 for opt_name in $opts; do
