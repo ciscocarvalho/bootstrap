@@ -22,6 +22,16 @@ pull_dotfiles() {
   git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME reset --hard HEAD
 }
 
+pull_awesome_config() {
+  install_if_not_available git
+  git clone https://github.com/ciscocarvalho/awesome-config $HOME/.config/awesome
+}
+
+pull_nvim_config() {
+  install_if_not_available git
+  git clone https://github.com/ciscocarvalho/nvim-config $HOME/.config/nvim
+}
+
 pull_wallpapers() {
   install_if_not_available git
   git clone https://github.com/ciscocarvalho/wallpapers $HOME/wallpapers
@@ -61,6 +71,7 @@ authenticate_github_cli() {
 configure_zsh() {
   install_if_not_available zsh
   chsh -s $(which zsh)
+  zsh -i -c "exit"
 }
 
 install_nerdfont() {
@@ -150,6 +161,12 @@ ask_box "Authenticate Github CLI?" "Yes" "No" "Requires a web browser or an auth
 ask_box "Pull dotfiles repository?" "Yes" "No" "If some/all of those files already exist, they will be overwritten.\n\nFiles in $HOME/.config/nvim/ are required for bootstrapping Neovim.\n\nFiles in $HOME/Misc/package-lists/arch/ are required for installing packages from Pacman and/or AUR.\n\nRequires Github username and password/authentication token."
 [ "$?" = 0 ] && opt_pull_dotfiles=1
 
+ask_box "Pull awesome config?" "Yes" "No" "If some/all of those files already exist, they will be overwritten."
+[ "$?" = 0 ] && opt_pull_awesome_config=1
+
+ask_box "Pull nvim config?" "Yes" "No" "If some/all of those files already exist, they will be overwritten."
+[ "$?" = 0 ] && opt_pull_nvim_config=1
+
 ask_box "Pull wallpapers repository?" "Yes" "No" "If some/all of those files already exist, they will be overwritten."
 [ "$?" = 0 ] && opt_pull_wallpapers=1
 
@@ -182,7 +199,7 @@ ask_box "Install NPM packages?" "Yes" "No" ""
 ask_box "Uninstall gnome keyring?" "Yes" "No" "Keyring is a linux security feature, but gnome keyring makes an annoying popup appear everytime one opens up a browser if they use automatic login on their system.\n\ngnome keyring is installed by default in some linux distros."
 [ "$?" = 0 ] && opt_uninstall_gnome_keyring=1
 
-opts="configure_git authenticate_github_cli pull_dotfiles pull_wallpapers bootstrap_neovim configure_zsh install_nerdfonts install_pacman install_aur_binary install_aur_non_binary install_pip install_npm uninstall_gnome_keyring"
+opts="configure_git authenticate_github_cli pull_dotfiles pull_awesome_config pull_nvim_config pull_wallpapers bootstrap_neovim configure_zsh install_nerdfonts install_pacman install_aur_binary install_aur_non_binary install_pip install_npm uninstall_gnome_keyring"
 opts_info=""
 
 for opt_name in $opts; do
