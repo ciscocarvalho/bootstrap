@@ -38,14 +38,21 @@ pull_wallpapers() {
 }
 
 build_nvim() {
-  local NVIM_SRC_DIR=/tmp/neovim
-  local NVIM_INSTALL_DIR=/tmp/new-neovim
+  local NVIM_SRC_DIR=/tmp/neovim-src
+  local NVIM_TEMP_INSTALL_DIR=/tmp/neovim-temp-install
 
   install_if_not_available git
   git clone https://github.com/neovim/neovim "$NVIM_SRC_DIR" --depth 1
   cd "$NVIM_SRC_DIR"
-  make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$NVIM_INSTALL_DIR" install
-  echo "Neovim built and installed in $NVIM_INSTALL_DIR"
+  make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$NVIM_TEMP_INSTALL_DIR" install
+
+  local NVIM_VERSION="$("$NVIM_TEMP_INSTALL_DIR/bin/nvim" -v | head -n 1 | cut -d " " -f 2)"
+  local NVIM_INSTALL_DIR="/opt/nvim-$NVIM_VERSION"
+
+  sudo mv "$NVIM_TEMP_INSTALL_DIR" "$NVIM_INSTALL_DIR"
+  sudo ln -fs "$NVIM_INSTALL_DIR/bin/nvim" "/usr/local/bin/nvim"
+  mkdir -p "$HOME/.local/share/applications"
+  sudo ln -fs "$NVIM_INSTALL_DIR/share/applications/nvim.desktop" "$HOME/.local/share/applications/nvim.desktop"
 }
 
 configure_git() {
