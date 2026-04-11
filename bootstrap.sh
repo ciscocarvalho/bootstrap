@@ -162,6 +162,20 @@ uninstall_gnome_keyring() {
   sudo pacman -Rns gnome-keyring
 }
 
+enable_udisks_service() {
+  sudo systemctl enable udisks2.service
+}
+
+enable_bluetooth_service() {
+  sudo systemctl enable bluetooth.service
+}
+
+setup_postgresql() {
+  sudo systemctl enable postgresql
+  sudo systemctl start postgresql
+  sudo -iu postgres initdb -D /var/lib/postgres/data
+}
+
 ask_box() { dialog --colors --title "$1" --yes-label "$2" --no-label "$3" --yesno "$4" 0 0; }
 
 ask_box "Bootstrap Script" "Continue" "Return" "This script is going to bootstrap Francisco Carvalho's system configuration.\n\nIt will assume it is running on a Manjaro system."
@@ -219,6 +233,15 @@ ask_box "Install NPM packages?" "Yes" "No" ""
 
 ask_box "Uninstall gnome keyring?" "Yes" "No" "Keyring is a linux security feature, but gnome keyring makes an annoying popup appear everytime one opens up a browser if they use automatic login on their system.\n\ngnome keyring is installed by default in some linux distros."
 [ "$?" = 0 ] && opt_uninstall_gnome_keyring=1
+
+ask_box "Enable udisks service?" "Yes" "No" ""
+[ "$?" = 0 ] && opt_enable_udisks_service=1
+
+ask_box "Enable bluetooth service?" "Yes" "No" ""
+[ "$?" = 0 ] && opt_enable_bluetooth_service=1
+
+ask_box "Setup PostgreSQL?" "Yes" "No" ""
+[ "$?" = 0 ] && opt_setup_postgresql=1
 
 opts="configure_git authenticate_github_cli pull_dotfiles pull_awesome_config pull_nvim_config pull_wallpapers build_nvim bootstrap_neovim configure_zsh install_nerdfonts install_pacman install_aur_binary install_aur_non_binary install_pip install_npm uninstall_gnome_keyring"
 opts_info=""
